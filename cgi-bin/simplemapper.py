@@ -103,27 +103,27 @@ class BaseMapper(object):
     self.getconnection().commit()
     cur.close()
 
-    where_conditions={
-        '_gi':'>', '_lt':'<',
-        '_gte':'>=', '_lte':'<=',
-        '_like':'LIKE' }
+  where_conditions={
+    '_gt':'>', '_lt':'<',
+    '_gte':'>=', '_lte':'<=',
+    '_like':'LIKE' }
 
-    @classmethod
-    def select(cls, **kws):
-      """
-      テーブルかたデータをSELECTする
-      """
-      order=''
-      if "order_by" in kws.keys():
-        order=" ORDER BY " + kws['order_by']
-        del kws['order_by']
-      where=[]
-      values=[]
-      for key in kws.keys():
-        ct=''
+  @classmethod
+  def select(cls, **kws):
+    """
+    テーブルかたデータをSELECTする
+    """
+    order=''
+    if "order_by" in kws.keys():
+      order=" ORDER BY " + kws['order_by']
+      del kws['order_by']
+    where=[]
+    values=[]
+    for key in kws.keys():
+        ct='='
         kwkeys=cls.where_conditions.keys()
         for ckey in kwkeys:
-          if ckey.endswitch(ckey):
+          if key.endswitch(ckey):
             ct=cls.where_conditions[ckey]
             kws[key.replace(ckey, '')]=kws[key]
             del kws[key]
@@ -131,14 +131,14 @@ class BaseMapper(object):
             break
         where.append(' '.join((key, ct, '? ')))
         values.append(kws[key])
-      wherestr="AND ".join(where)
-      sql="SELECT id FROM" + cls.__name__
-      if wherestr:
+    wherestr="AND ".join(where)
+    sql="SELECT id FROM" + cls.__name__
+    if wherestr:
         sql+=" WHERE " +wherestr
-      sql+=order
-      cur=cls.getconnection().cursor()
-      cur.execute(sql, values)
-      for item in cur.fetchall():
+    sql+=order
+    cur=cls.getconnection().cursor()
+    cur.execute(sql, values)
+    for item in cur.fetchall():
         ins= cls(id=item[0])
         yield ins
-      cur.close()
+    cur.close()
