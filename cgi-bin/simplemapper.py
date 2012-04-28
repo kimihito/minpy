@@ -123,7 +123,7 @@ class BaseMapper(object):
         ct='='
         kwkeys=cls.where_conditions.keys()
         for ckey in kwkeys:
-          if key.endswitch(ckey):
+          if key.endswith(ckey):
             ct=cls.where_conditions[ckey]
             kws[key.replace(ckey, '')]=kws[key]
             del kws[key]
