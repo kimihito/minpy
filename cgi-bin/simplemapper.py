@@ -132,7 +132,7 @@ class BaseMapper(object):
         where.append(' '.join((key, ct, '? ')))
         values.append(kws[key])
     wherestr="AND ".join(where)
-    sql="SELECT id FROM" + cls.__name__
+    sql="SELECT id FROM " + cls.__name__
     if wherestr:
         sql+=" WHERE " +wherestr
     sql+=order

@@ -4,9 +4,9 @@ import re
 
 if_pat=re.compile(r"\$if\s+(.*\:)")
 endif_pat=re.compile(r"\$endif")
-for_pat=re.compile(r"$for\s+(.)*\s+in\s(.*\:)")
+for_pat=re.compile(r"$for\s+(.*)\s+in\s(.*\:)")
 endfor_pat=re.compile(r"\$endfor")
-value_pat=re.compile(r"\$((.+?))")
+value_pat=re.compile(r"\${(.+?)}")
 
 class SimpleTemplate(object):
   """
@@ -21,7 +21,7 @@ class SimpleTemplate(object):
       body=unicode(f.read(),'utf-8','ignore')
     body=body.replace('\r\n','\n')
     self.lines= body.split('\n')
-    self.sentence=((if_pat, self.handle_if),
+    self.sentences=((if_pat, self.handle_if),
                    (for_pat, self.handle_for),
                    (value_pat, self.handle_value),)
 
@@ -29,7 +29,7 @@ class SimpleTemplate(object):
     """
     テンプレートをレンダリングする
     """
-    1, o=self.process(kws=kws)
+    l,o=self.process(kws=kws)
     return o
 
   def find_matchline(self, pat, start_line=0):
@@ -43,7 +43,7 @@ class SimpleTemplate(object):
       cur_line+=1
     return -1
 
-  def process(self, exit_pats=(), start_line=0, kws=()):
+  def process(self, exit_pats=(), start_line=0, kws={}):
     """
     テンプレートのレンダリングを処理する
     """
@@ -65,7 +65,7 @@ class SimpleTemplate(object):
             break
           except Exception, e:
             raise
-              "Following error occured in line %d\n%s"%(cur_line,str(e))
+            "Following error occured in line %d\n%s"%(cur_line,str(e))
       if not pattern_found:
         output+=line+'\n'
       cur_line+=1
@@ -73,12 +73,12 @@ class SimpleTemplate(object):
       raise "End of lies while parsing"
     return cur_line, output
 
-  def handle_value(self, _match, _line_no, _kws{}):
+  def handle_value(self, _match, _line_no, _kws={}):
     """
     ${...}を処理する
     """
     _line=self.lines[_line_no]
-    _rep[]
+    _rep=[]
     locals().update(_kws)
     pos=0
     while True:
@@ -86,7 +86,7 @@ class SimpleTemplate(object):
       if not _m:
         break
       pos+=_m.end()
-      _rep.append( (_m.group(1),unicode(eval(_m.group(1)))) )
+      _rep.append( (_m.group(1), unicode(eval(_m.group(1)))) )
     for t, r in _rep:
       _line=_line.replace('${%s}'%t,r)
     return _line_no, _line+'\n'
@@ -105,7 +105,7 @@ class SimpleTemplate(object):
       _out=''
     return _line-1, _out
 
-  def handle_for(self, _match, _line_no, _kws{}):
+  def handle_for(self, _match, _line_no, _kws={}):
     """
     $forを処理する
     """
