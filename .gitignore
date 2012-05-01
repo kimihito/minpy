@@ -1,4 +1,4 @@
-w[a-z]
+.*.sw[a-z]
 *.un~
 Session.vim
 .DS_Store
