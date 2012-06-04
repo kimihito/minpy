@@ -11,14 +11,14 @@
       <a href="./rssreader2.py">RSSの追加、編集</a>
     </div>
     <ol>
-    $for item in rsslist:
+      $for item in rsslist:
       <li>
-         ${item.title}
+      ${item.title}
       <span class="control">
         <a href="./editurl.py?id=${item.id}">編集</a>
         <span>
           </li>
-    $endfor
+          $endfor
         </ol>
       </body>
     </html>
