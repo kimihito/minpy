@@ -25,6 +25,7 @@ class SimpleTemplate(object):
         self.sentences = ((if_pat, self.handle_if),
                           (for_pat, self.handle_for),
                           (value_pat, self.handle_value),)
+                          
 
     def render(self, kws={}):
         """
@@ -65,8 +66,7 @@ class SimpleTemplate(object):
                         output+=out
                         break
                     except Exception, e:
-                        raise "Following error occured in line %d\n%s" \
-                                            %(cur_line, str(e))
+                        raise e #Exception("Following error occured in line %d\n%s" % (cur_line, str(e)))
             if not pattern_found:
                 output+=line+'\n'
             cur_line+=1
